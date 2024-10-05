@@ -2,13 +2,13 @@ const path = require('path');
 const fs = require('fs');
 const fsPromises = require('fs').promises;
 
-class AssetMapPlugin {
+class GoSSRAssetsPlugin {
     constructor(options = {}) {
         this.options = options;
     }
 
     apply(compiler) {
-        compiler.hooks.entryOption.tap('AssetMapPlugin', (context, entry) => {
+        compiler.hooks.entryOption.tap('GoSSRAssetsPlugin', (context, entry) => {
             const walkDirSync = (dir) => {
                 const entryName = dir === '.' ? 'main' : path.join('pages', dir);
                 const dirPath = path.join(compiler.context, 'pages', dir);
@@ -39,7 +39,7 @@ class AssetMapPlugin {
             walkDirSync('.');
         });
 
-        compiler.hooks.emit.tapAsync('AssetMapPlugin', async (compilation, callback) => {
+        compiler.hooks.emit.tapAsync('GoSSRAssetsPlugin', async (compilation, callback) => {
             const entrypoints = {};
             const images = {};
             const publicPath = compilation.options.output.publicPath || '/';
@@ -79,4 +79,4 @@ class AssetMapPlugin {
     }
 }
 
-module.exports = AssetMapPlugin;
+module.exports = GoSSRAssetsPlugin;
