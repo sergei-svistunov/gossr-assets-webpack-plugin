@@ -1,5 +1,7 @@
-const path = require('path');
+const pathOs = require('path');
+const path = pathOs.posix;
 const fs = require('fs');
+const os = require("os");
 const fsPromises = require('fs').promises;
 
 class GoSSRAssetsPlugin {
@@ -43,7 +45,10 @@ class GoSSRAssetsPlugin {
             const entrypoints = {};
             const images = {};
             const publicPath = compilation.options.output.publicPath || '/';
-            const outputPath = path.relative(compiler.context, compilation.options.output.path);
+            let outputPath = pathOs.relative(compiler.context, compilation.options.output.path);
+            if (os.platform() === 'win32') {
+                outputPath = outputPath.replace('\\', '/');
+            }
 
             try {
                 for (const [entryName, entry] of compilation.entrypoints) {
